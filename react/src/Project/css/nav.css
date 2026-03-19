@@ -1,0 +1,49 @@
+/* שמירה על הנב בראש הדף */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* ריווח בין הלינקים וכפתורים */
+.navbar-nav {
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+/* הגדלה והדגשה של הקישורים */
+.nav-link {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* רווח בין אייקון לטקסט */
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #00d4ff;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* כפתורי Login ו-SignUp נשארים כפי שהם */
+.navbar .btn {
+  font-weight: bold;
+}
+
+/* ריווח בין כפתורי Login ו-SignUp */
+.navbar .ml-auto {
+  display: flex;
+  gap: 10px;
+}
+
+
+
+
+/*  - הצללה קלילה לנב */
+/* .navbar {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+} */

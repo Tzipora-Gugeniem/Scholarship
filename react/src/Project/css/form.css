@@ -1,0 +1,117 @@
+
+/* ------------------------------ */
+/* בסיס הטופס */
+.base {
+  width: 66%; /* שני שלישים רוחב העמוד */
+  margin: 40px auto; /* ממורכז */
+  padding: 30px;
+  background-color: #ffffff; /* לבן */
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+/* תפריט הכפתורים למעלה */
+nav {
+  display: flex;
+  justify-content: center; /* מרכז הכפתורים */
+  gap: 15px; /* רווח בין הכפתורים */
+  width: 100%; /* לא מתפרס על כל העמוד, אלא לפי רוחב הטופס */
+}
+
+/* כפתורי ניווט למעלה */
+
+
+/* קלטים ולייבלים */
+.input label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.input input,
+.input select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input input:focus,
+.input select:focus {
+  border-color: #1c1819 5px;
+  box-shadow: 0 0 6px rgba(12, 238, 246, 0.868);
+}
+
+
+
+.base .form-buttons button:hover {
+  background-color: #0f6cd1;
+  transform: translateY(-2px);
+}
+/* קונטיינר לכפתורי Back/Next בתחתית הטופס */
+.base .form-buttons {
+  display: flex;
+  justify-content: center; /* מרכז בשורה */
+  gap: 15px; /* רווח בין הכפתורים */
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* כפתורי Back/Next */
+.base .form-buttons button {
+  flex: 1; /* כל כפתור יתפוס חלק שווה */
+  max-width: 50%; /* לא יותר מחצי רוחב הטופס */
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background-color: #cf5a6c;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.base .form-buttons button:hover {
+  background-color: #d10f56;
+  transform: translateY(-2px);
+}
+input [type=checkbox]{
+width: 10px;
+}
+
+ input:invalid:not(#username):not(#password) {
+   box-shadow: 0 0 6px rgba(248, 9, 9, 0.842);
+}
+.fileButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 50%;
+  font-size: 13px;
+  color: #555;
+  
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  
+  padding: 4px 0;
+  margin-top: 4px;
+  
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.fileButton:hover {
+  color: #009fa0;
+  border-bottom-color:#009FAF;
+}

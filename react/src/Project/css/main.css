@@ -1,0 +1,7 @@
+.navbar-expand-lg ,.navbar-dark ,.bg-dark{
+    position: fixed;
+      align-content: first baseline; 
+      align-self: first baseline;
+      scroll-margin-block: unset;
+margin-bottom: 5%;
+}
