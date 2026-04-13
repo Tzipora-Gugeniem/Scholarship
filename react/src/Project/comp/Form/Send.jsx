@@ -31,24 +31,27 @@ const [confirm,setConfirm]=useState(false)
       formData.append('family', JSON.stringify(state.family))
       formData.append('skill', JSON.stringify(state.skill))
       formData.append('bank', JSON.stringify(state.bank))
-       if (idCardFile) formData.append('idCardFile', idCardFile)
+  if (idCardFile) formData.append('idCardFile', idCardFile)
   if (bankAuthFile) formData.append('bankAuthFile', bankAuthFile)
   if (studyPermitFile) formData.append('studyPermitFile', studyPermitFile)
       
       await save(formData)  // ← שליחה לשרת
 
-      swal({
-        title: "Success",
-        text: "Your request was sent successfully",
-        content: { element: "img", attributes: { src: "/logo7.png", style: "height:10vh; width:auto;" } },
-        timer: 3000,
-        buttons: false
-      }).then(() => { 
-         navigate("/home")
-        dispatch(updateCurrentDetails({}))
-      
-      })
-
+    // בתוך פונקציית saveReq ב-Send.jsx
+swal({
+  title: "Success",
+  text: "Your request was sent successfully",
+  icon: "success",
+  timer: 2000,
+  buttons: false
+}).then(() => { 
+  // 1. קודם כל מנווטים החוצה כדי שהקומפוננטות של הטופס יתפרקו (Unmount)
+  navigate("/home");
+  
+  // 2. רק אז מאפסים את הנתונים ב-Redux (אם באמת צריך)
+  // עדיף לשלוח null או אובייקט במבנה המקורי
+  dispatch(updateCurrentDetails(null)); 
+});
     } catch (err) {
       swal({ title: "Error", text: "save failed", icon: "error" })
     }

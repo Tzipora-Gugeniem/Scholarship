@@ -2,8 +2,8 @@
 import './App.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Main} from'./Project/Main';
 
-import {Main} from'./Project/Main'
 
 function App() {
   return (

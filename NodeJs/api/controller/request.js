@@ -1,5 +1,5 @@
 
-import { date } from "joi";
+
 import requestModel from "../models/request.js";
 
 
@@ -12,15 +12,16 @@ export const getAll =(req,res)=>{
           return res.status(500).send(error)   
         })
     }
-    
+    מ
     // קבלת בקשה קיימת עבור משתמש מחובר על פי העוגיה רק עבור בקשה בסטטוס טיוטה 
     // עבור בקשה שכבר הוגשה יחזיר רק סטטוס
     export const getRequest = async (req, res) => {
   try {
     const request = await requestModel.findOne({ user_id: req.user._id });
     if (!request) return res.status(201).json({ message: 'not exists yet' });
-   if(request.status !== 'draft') return res.status(200).json({ status: request.status,date:request.lastSavedAt,message: 'request already submitted' });
-    res.status(200).json(request);
+    if(request.status !== "draft") return res.status(200).json({ status: request.status,lastSavedAt:request.lastSavedAt,isSubmitted:true });
+    
+    return res.status(200).json({ request:request, isSubmitted: false });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

@@ -20,7 +20,10 @@ const requestSchema = new mongoose.Schema({
   }},
  
    lastSavedAt: { type: Date, default: null },
-  status: { type: ["waiting", "approved", "rejected"], default: "waiting" }
+ status: {
+    type: String,
+    default: "draft"
+}
 });
 
 export default mongoose.model('Request', requestSchema);

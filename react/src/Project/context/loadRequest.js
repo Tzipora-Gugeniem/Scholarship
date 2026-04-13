@@ -7,36 +7,38 @@ export const useLoadRequest = () => {
     const dispatch = useDispatch();
     const { setIdCardFile, setBankAuthFile, setStudyPermitFile } = useFiles();
 
-    // פונקציית עזר פנימית להמרת ה-Buffer מהשרת לקובץ JS
     const bufferToFile = (fileObj, fileName) => {
         if (!fileObj || !fileObj.data) return null;
-        // מונגו מחזיר את ה-Buffer בתוך שדה data.data
         const blob = new Blob([new Uint8Array(fileObj.data.data)], { type: fileObj.contentType });
         return new File([blob], fileName, { type: fileObj.contentType });
     };
 
     const load = async () => {
         try {
-            const request = await getRequest();
+            const response = await getRequest(); 
             
-            // אם השרת החזיר סטטוס 201 (לא קיים) או שאין מידע
-            if (!request || request.message === 'not exists yet') return null;
+            if (!response || response.message === 'not exists yet') return null;
 
-            // 1. עדכון Redux (כל הנתונים הטקסטואליים והסטטוס)
-            dispatch(updateCurrentDetails(request));
+            // חילוץ הנתונים מתוך העטיפה החדשה
+            const actualRequestData = response.request; 
 
-            // 2. המרת הקבצים ושמירתם ב-Context
-            if (request.self?.idCardFile) {
-                setIdCardFile(bufferToFile(request.self.idCardFile, "Saved ID Card"));
+            if (!actualRequestData) return response; // מקרה שזה רק סטטוס (isSubmitted: true)
+
+            // 1. עדכון Redux
+            dispatch(updateCurrentDetails(actualRequestData));
+
+            // 2. עדכון הקבצים - שימי לב לשינוי בנתיב הגישה (actualRequestData)
+            if (actualRequestData.self?.idCardFile) {
+                setIdCardFile(bufferToFile(actualRequestData.self.idCardFile, "Saved ID Card"));
             }
-            if (request.bank?.authFile) {
-                setBankAuthFile(bufferToFile(request.bank.authFile, "Saved Bank Auth"));
+            if (actualRequestData.bank?.authFile) {
+                setBankAuthFile(bufferToFile(actualRequestData.bank.authFile, "Saved Bank Auth"));
             }
-            if (request.skill?.studyPermitFile) {
-                setStudyPermitFile(bufferToFile(request.skill.studyPermitFile, "Saved Study Permit"));
+            if (actualRequestData.skill?.studyPermitFile) {
+                setStudyPermitFile(bufferToFile(actualRequestData.skill.studyPermitFile, "Saved Study Permit"));
             }
 
-            return request;
+            return response;
         } catch (err) {
             console.error("Error loading request:", err);
             throw err;

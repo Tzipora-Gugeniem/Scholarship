@@ -1,18 +1,23 @@
 import { useSelector } from "react-redux";
 import { setCurrent } from "../redux/Users";
 import { Box, Typography } from "@mui/material";
+import { getRequest } from "../api/request";
+
 
 export const SeeStatus=()=>{
 
     
-  // שליפת המשתמש הנוכחי
-  const currentUser = useSelector(state => state.User?.Current);
 
-  // רשימת כל הבקשות
-  const allRequests = useSelector(state => state.request?.list || []);
-
-  // מחפש את הבקשה של המשתמש הנוכחי
-  const req = currentUser ? allRequests.find(r => r.self.idUser === currentUser.Id) : null;
+const currentUser = useSelector((state) => state.User?.Current);
+  const req= async()=>{
+    getRequest().then(res=>{
+      console.log(res.data)
+      return res.data
+    }).catch(err=>{
+      console.error("Error fetching request:", err);
+      return null;
+    })
+  }
  //בהתאם לסטטוס הבקשה עיצובי סטטוס
   const statusStyles = {
   waiting: {
@@ -55,7 +60,7 @@ export const SeeStatus=()=>{
           border: "2px solid #1abc9c" 
         }}
       >
-        {req ? (
+        {req.isSubmitted ? (
           <>
         
             {/* סטטוס הבקשה גדול ושחור */}
@@ -65,10 +70,11 @@ export const SeeStatus=()=>{
         
             </Typography>
 
-<p>{req.status==="waiting"?<span> Your request is still under review</span>:req.status==="allowed"?<span> Your request has been approved</span>:<span>  We’re sorry, your request has been rejected.</span>}</p>
+<p>{req.status==="waiting"?<span> Your request  is still under review</span>:req.status==="allowed"?<span> Your request has been approved</span>:<span>  We’re sorry, your request has been rejected.</span>}</p>
             {/* שם פרטי ושם משפחה */}
             <Typography variant="h6" sx={{ color: "#141616ff", mb: 1 }}>
               {currentUser.name} {currentUser.LName}
+
             </Typography>
            
           </>
@@ -79,19 +85,7 @@ export const SeeStatus=()=>{
         )}
       </Box>
     </Box>
-  {/* <Box     sx={{
-          // גמישות לרוחב מסך
-          p: 4,
-          borderRadius: 2,
-          boxShadow: "0 0 40px rgba(8, 7, 16, 0.6)",
-          backgroundColor: "#fff",
-          textAlign: "center"
-        }}>
-    {req?.status}
-    </Box>
-    {
-        console.log(req?.status)
-        
-    } */}
+
+ 
     </>
 }
