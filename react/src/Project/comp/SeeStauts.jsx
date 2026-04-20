@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { setCurrent } from "../redux/Users";
 import { Box, Typography } from "@mui/material";
@@ -8,16 +9,27 @@ export const SeeStatus=()=>{
 
     
 
-const currentUser = useSelector((state) => state.User?.Current);
-  const req= async()=>{
-    getRequest().then(res=>{
-      console.log(res.data)
-      return res.data
-    }).catch(err=>{
-      console.error("Error fetching request:", err);
-      return null;
-    })
-  }
+  const currentUser = useSelector((state) => state.User?.Current);
+  const [req, setReq] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchReq = async () => {
+      try {
+        const res  = await getRequest();
+        console.log(res.status);
+        if (isMounted) setReq(res);
+      } catch (err) {
+        console.error("Error fetching request:", err);
+        if (isMounted) setReq(null);
+      }
+    };
+
+    fetchReq();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser?.id]);
  //בהתאם לסטטוס הבקשה עיצובי סטטוס
   const statusStyles = {
   waiting: {
@@ -60,17 +72,17 @@ const currentUser = useSelector((state) => state.User?.Current);
           border: "2px solid #1abc9c" 
         }}
       >
-        {req.isSubmitted ? (
+        {req?.isSubmitted ? (
           <>
         
             {/* סטטוס הבקשה גדול ושחור */}
             <Typography variant="h4" sx={{ color: "#000000", fontWeight: "bold", mb: 2 }}>
-              {req.status.toUpperCase()}
+              {req?.status?.toUpperCase()}
               <br></br>
         
             </Typography>
 
-<p>{req.status==="waiting"?<span> Your request  is still under review</span>:req.status==="allowed"?<span> Your request has been approved</span>:<span>  We’re sorry, your request has been rejected.</span>}</p>
+<p>{req?.status==="waiting"?<span> Your request  is still under review</span>:req?.status==="allowed"?<span> Your request has been approved</span>:<span>  We’re sorry, your request has been rejected.</span>}</p>
             {/* שם פרטי ושם משפחה */}
             <Typography variant="h6" sx={{ color: "#141616ff", mb: 1 }}>
               {currentUser.name} {currentUser.LName}

@@ -12,7 +12,7 @@ export const getAll =(req,res)=>{
           return res.status(500).send(error)   
         })
     }
-    מ
+    
     // קבלת בקשה קיימת עבור משתמש מחובר על פי העוגיה רק עבור בקשה בסטטוס טיוטה 
     // עבור בקשה שכבר הוגשה יחזיר רק סטטוס
     export const getRequest = async (req, res) => {
