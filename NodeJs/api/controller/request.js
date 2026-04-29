@@ -3,16 +3,6 @@
 import requestModel from "../models/request.js";
 
 
-export const getAll =(req,res)=>{
-    requestModel.find().then(data=>
-    {
-        res.status(200).send(data)
-        })
-        .catch(error=>{
-          return res.status(500).send(error)   
-        })
-    }
-
     // קבלת בקשה קיימת עבור משתמש מחובר על פי העוגיה רק עבור בקשה בסטטוס טיוטה 
     // עבור בקשה שכבר הוגשה יחזיר רק סטטוס
     export const getRequest = async (req, res) => {
