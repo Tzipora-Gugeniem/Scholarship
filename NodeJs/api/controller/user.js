@@ -1,7 +1,7 @@
 import userModel from '../models/user.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import user from '../models/user.js'
+
 // הגדרת העוגיה
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -57,6 +57,7 @@ export const login=async (req,res)=>{
 try{
   const {id_user,password}=req.body
   // מציאת המשתמש
+ 
   const user=await userModel.findOne({id_user})
   if(!user)  { return res.status(404).json({ message: 'User not found' }) }
 

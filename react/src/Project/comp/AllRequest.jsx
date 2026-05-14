@@ -1,125 +1,124 @@
-        import { useDispatch, useSelector } from "react-redux"
-        import { allow, reject, selectWaiting } from "../redux/request"
-        import { useState } from "react"
-        import { Details } from "../comp/Details"
-        import { Outlet, useNavigate } from "react-router"
+import { useDispatch, useSelector } from "react-redux";
+import { allow, reject, selectWaiting, setList } from "../redux/request";
+import { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router";
+import { getAllWaitingReq } from "../api/admin";
 
-        export const AllRequest = () => {
-            const [openId, setOpenId] = useState(null)
+export const AllRequest = () => {
+    // 1. State מקומי לניהול תצוגה
+    const [openId, setOpenId] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-        const navigate=useNavigate()
-            const dispatch = useDispatch()
-            //פונקציה לפתיחת וסגירת פרטי הבקשה ניתוב לקומפוננטת הדיטיילס
-            const toggle = (id) => {
-                if (openId === id) {
-            setOpenId(null)
-            navigate("/AllRequest")
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // 2. שליפת הנתונים מהרידקס
+    const waitingRequests = useSelector(state => state.request.list || []);
+
+    // 3. טעינת נתונים מהשרת בטעינה ראשונה
+    useEffect(() => {
+        const fetchRequests = async () => {
+            try {
+                setLoading(true);
+                const response = await getAllWaitingReq();
+                console.log(response.data);
+                
+                const data = response.data || []; 
+                dispatch(setList(data)); // שמירה ברידקס
+            } catch (err) {
+                console.error("Failed to fetch admin data:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchRequests();
+    }, [dispatch]);
+
+    // פונקציית ניווט ופתיחת פרטים
+    const toggle = (id) => {
+        if (openId === id) {
+            setOpenId(null);
+            navigate("/AllRequest");
         } else {
-            setOpenId(id)
-            navigate(`Details/${id}`)
-            }}
-            //שליפת הסטייט
-            const notWaiting = useSelector(selectWaiting)
-            return <>
-    <div style={{ height: '20vh' }}></div> {/* רווח מעל התגיות */}
-    <div   >
-        <h3>All Waiting Request</h3>
-        {//מעבר על הבקשות שמחכות
-            notWaiting.map((item, index) => (<div key={index}
-                style={{
-                    width: "70%",
-                    display: "flex",
-                    justifySelf: 'center',
-                    justifyContent: "space-between",
-                    flexDirection: "column",
-                    border: "1px solid #ccc",
-                    padding: "15px" ,
-                    margin: "10px 0",
-                    borderRadius: "10px",
-                    background: "#fff",
-                    transition: "0.3s" }}> 
-                            {/* דיו הבקשה הספציפית */}
-    <div
-            style={{
-                //width: { xs: "45%", sm: "30%", md: "40%" }, // רוחב גמיש לפי מסך
-                display: "flex",
-                flexDirection: "row",
-                borderRadius: 3,      // פינות עגולות
-                boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-                backgroundColor: "#ffffff", // לבן
-                textAlign: "center",
-                                
-                justifyContent: "space-evenly",
+            setOpenId(id);
+            navigate(`Details/${id}`);
+        }
+    };
 
-            }}>
-                                    {/* דיו המכיל פרטים בסיסים על השבקשה */}
-            <div>
-                <p>Request ID: {item.id}</p>
-                <p>User ID: {item.self?.idUser}</p>
-                <p>User name: {item.self?.name}{item.self?.LName}</p>
-                <p>Status: {item.status}</p>
-            </div>
-            {/* דיו המכיל כפתור אישור ודחיה */}
-            <div style={{ justifySelf: "center", display: 'flex', width: "30%", alignSelf: 'end', padding: 10 }}>
-                <button onClick={() => {
-                    dispatch(allow(item.id))}}
-                className="btn btn-light"
-                                        style={{
-                        alignSelf: 'flex-end',
-                        width: "40%",
-                        height: "7vh",
-                        marginTop: "10px",
-                        padding: "8px 12px",
-                        backgroundColor: "#4c93afff",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",}} >Allow</button>
+    if (loading) return <div style={{ marginTop: '25vh', textAlign: 'center' }}>Loading requests...</div>;
 
-                <button onClick={() => dispatch(reject(item.id))}
-                     style={{
-                        alignSelf: 'flex-end',
+    return (
+        <>
+            <div style={{ height: '15vh' }}></div>
+            <div style={{ padding: "20px" }}>
+                <h3 style={{ textAlign: 'center', marginBottom: '30px' }}>All Waiting Requests</h3>
+                
+                {waitingRequests.length === 0 ? (
+                    <p style={{ textAlign: 'center' }}>No waiting requests at the moment.</p>
+                ) : (
+                    waitingRequests.map((item) => (
+                        <div key={item._id || item.id} style={containerStyle}>
+                            {/* שורת הבקשה המקוצרת */}
+                            <div style={cardHeaderStyle}>
+                                <div style={{ textAlign: 'left' }}>
+                                    <p><strong>User:</strong> {item.self?.name} {item.self?.LName}</p>
+                                    <p><strong>ID:</strong> {item.self?.idUser}</p>
+                                    <p><strong>Status:</strong> <span style={{ color: '#f39c12' }}>{item.status}</span></p>
+                                </div>
 
-                          width: "40%",
-                         height: "7vh",
-                          marginTop: "10px",
-                          padding: "8px 12px",
-                          backgroundColor: "#36f1f4ff",
-                        color: "white",
-                         border: "none",
-                        borderRadius: "5px"
-                                        }}>Reject</button> </div>
-    {/* החץ שמשתנה לפי מצב */}
-     <div style={{ cursor: "pointer", alignSelf: "center", padding: 10, fontWeight: "bold" }}
-                // הפעלת הפונקציה המפעלה פרטים
-                 onClick={() => toggle(item.id)}>
-                                
-          all details: {openId === item.id ?"▼" : "▶"}
-             </div>
-                            
-                            
-            </div>
+                                {/* כפתורי פעולה */}
+                                <div style={buttonGroupStyle}>
+                                    <button 
+                                        onClick={() => dispatch(allow(item._id || item.id))}
+                                        style={{ ...btnStyle, backgroundColor: "#27ae60" }}>
+                                        Allow
+                                    </button>
+                                    <button 
+                                        onClick={() => dispatch(reject(item._id || item.id))}
+                                        style={{ ...btnStyle, backgroundColor: "#e74c3c" }}>
+                                        Reject
+                                    </button>
+                                </div>
 
-                            {/* פרטי הבקשה שמופיעים בעת לחיצה */}
-                            {openId === item.id && (
-                                <div style={{
+                                {/* כפתור פתיחת פרטים */}
+                                <div style={toggleIconStyle} onClick={() => toggle(item._id || item.id)}>
+                                    {openId === (item._id || item.id) ? "▼ Close" : "▶ Details"}
+                                </div>
+                            </div>
 
-
-            borderRadius: "0 0 10px 10px",
-            background: "#fff",
-            padding: "15px 25px",
-
-                                }}>
-                        {/* הצגת הילד של קומפוננטת אלרקואסט */}
-        <div style={{ marginTop: 10 }}>
-            <Outlet />
-        </div>
+                            {/* אזור ה-Outlet (הפרטים המורחבים) */}
+                            {openId === (item._id || item.id) && (
+                                <div style={detailsBoxStyle}>
+                                    <Outlet />
                                 </div>
                             )}
-                        </div>))
+                        </div>
+                    ))
+                )}
+            </div>
+        </>
+    );
+};
 
-                    }
+// --- אובייקטי עיצוב (למניעת בלאגן ב-JSX) ---
+const containerStyle = {
+    width: "80%", maxWidth: "900px", margin: "15px auto",
+    borderRadius: "12px", boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+    overflow: "hidden", background: "#fff"
+};
 
-                </div>
+const cardHeaderStyle = {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    padding: "20px", borderBottom: "1px solid #eee"
+};
 
-            </>
-        }
+const buttonGroupStyle = { display: 'flex', gap: '10px' };
+
+const btnStyle = {
+    padding: "8px 16px", color: "white", border: "none",
+    borderRadius: "6px", cursor: "pointer", fontWeight: "bold", transition: "0.2s"
+};
+
+const toggleIconStyle = { cursor: "pointer", color: "#3498db", fontWeight: "bold", minWidth: "80px" };
+
+const detailsBoxStyle = { background: "#f9f9f9", padding: "20px", borderTop: "2px solid #3498db" };

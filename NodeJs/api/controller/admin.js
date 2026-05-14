@@ -1,6 +1,6 @@
 // כל הפעולות שהמנהל היחיד שמורשה לבצע
-import requestModel from '../model/request.js'
-//צפייה בכל הבקשות שלא בסטטוס טיוטה
+import requestModel from "../models/request.js";
+// צפו בכל הבקשות שלא בסטטוס טיוטה
 export const getAll =(req,res)=>{
     requestModel.find({ status: { $ne: "draft" } }).then(data=>
     {
@@ -13,7 +13,7 @@ export const getAll =(req,res)=>{
 //כל הבקשות שהם בסטטוס ממתינים
 export const getAllWaiting =(req,res)=>{
     requestModel.find({ status: "waiting" }).then(data=>
-    {        res.status(200).send({})
+    {        res.status(200).json(data)
         } )
         .catch(error=>{
           return res.status(500).send(error)   

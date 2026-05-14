@@ -14,7 +14,10 @@ const requestSlice = createSlice({
     initialState,
 
     reducers: {
-
+// פונקציה  מכניסה את כל הרשימה שהגיעה מהשרת
+        setList: (state, action) => {
+            state.list = action.payload;
+        },
       
         //פונקציות מחליפות סטטוס
         allow: (state, action) => {
@@ -40,7 +43,7 @@ const requestSlice = createSlice({
 
 })
 //ייצוא הפעולות
-export const {  allow, reject,updateCurrentDetails } = requestSlice.actions
+export const {  allow, reject,updateCurrentDetails,setList } = requestSlice.actions
 
 export const selectWaiting = state => state.request.list.filter(x => x.status === "waiting")
 

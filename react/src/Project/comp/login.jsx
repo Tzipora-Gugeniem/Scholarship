@@ -35,7 +35,7 @@ if(obj.Id!=null &&obj.Pas)
       
      
 
-        swal("welcome","jknk","success");
+        swal("welcome",data.user.name,"success");
         navigate('/home');
     } 
     catch (error) {

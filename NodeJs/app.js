@@ -4,7 +4,9 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
 import requestRouter from './api/routes/request.js'
+import adminRouter from './api/routes/admin.js'
 import userRouter from './api/routes/user.js'
+
 
 //4 יצירת שרת
 const app=express()
@@ -25,6 +27,7 @@ mongoose.connect(process.env.MONGO_URI)
     })
 app.use('/request', requestRouter)
 app.use('/user', userRouter)
+app.use('/admin', adminRouter)
 
 const port=3001
 

@@ -14,8 +14,8 @@ const navigate=useNavigate()
     //הגדרת dispatch
     const dispatch = useDispatch()
 // סטייט של בדיקות תקינות
-const [child,setChild]=useState(true)
-const [adult,setAdult]=useState(true)
+const [child,setChild]=useState(true )
+const [adult,setAdult]=useState(true )
 //בדיקה שהנתונים   מלאים נכונים
 // משתנה זה יבדוק מתי הטופס מלא ותקין-2
 //  מתי הטופס לא מלא -1
@@ -43,14 +43,14 @@ const [adult,setAdult]=useState(true)
             <label name="child">Number of Children</label>
             <input name="child" type="number" onChange={(e) => { setFamily({ ...family, numChildren: e.target.value}) }} 
             value={family.numChildren} min={0} max={30} 
-            onBlur={(e)=>{setChild(e.target.validity.valid) }}/>
+            onMouseLeave={(e)=>{setChild(e.target.validity.valid) }}/>
                    {/* יןצג בעת שגיאה */}
         <p hidden={child} style={{color:'red'}}>Too match children</p>
             <label name="adult">Children over 19</label>
             <input name="adult" type="number" onChange={(e) => { setFamily({ ...family, numAdult: e.target.value}) }}
             //בדיקה שמספר הילדים המבוגרים קטן או שווה לסך הילדים במשפחה
                 value={family.numAdult} min={0} max={family.numChildren|| 30} 
-                  onBlur={(e)=>{setAdult(e.target.validity.valid)}}  />
+                  onMouseLeave={(e)=>{setAdult(e.target.validity.valid)}}  />
                         {/* יןצג בעת שגיאה */}
         <p hidden={adult} style={{color:'red'}}>Too match children</p>
         </div>
