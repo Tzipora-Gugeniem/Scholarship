@@ -21,12 +21,12 @@ const requestSlice = createSlice({
       
         //פונקציות מחליפות סטטוס
         allow: (state, action) => {
-            let index = state.list.findIndex(x => x.id === action.payload)
+            let index = state.list.findIndex(x => x._id === action.payload)
             state.list[index].status = "allowed"
            
         },
         reject: (state, action) => {
-            let index = state.list.findIndex(x => x.id === action.payload)
+            let index = state.list.findIndex(x => x._id === action.payload)
             state.list[index].status = "rejected"
         }
         ,

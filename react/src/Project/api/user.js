@@ -22,3 +22,23 @@ export const login = async(userDet)=>{
         throw error
     }
 }
+
+//שימוש בטוקן לשמירת המשתמש המחובר
+export const getMe = async () => {
+    try{
+        const response = await api.get('/user/me')
+        return response.data
+    }
+    catch(error){
+        throw error
+    }
+}
+//התנתקות- 
+export const logout = async () => {
+    try{
+        const response = await api.post('/user/logout')    
+        return response.data
+    }
+    catch(error){
+        throw error
+    }   }

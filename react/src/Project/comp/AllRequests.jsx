@@ -2,11 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { allow, reject, selectWaiting, setList } from "../redux/request";
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { getAllWaitingReq } from "../api/admin";
+import { getAllWaitingReq, updateStatus } from "../api/admin";
 import "../css/allRequest.css"
 
 
-export const AllRequest = () => {
+export const AllRequests = () => {
     // 1. State מקומי לניהול תצוגה
     const [openId, setOpenId] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ export const AllRequest = () => {
     const dispatch = useDispatch();
 
     // 2. שליפת הנתונים מהרידקס
-    const waitingRequests = useSelector(state => state.request.list || []);
+    const waitingRequests = useSelector(selectWaiting);
 
     // 3. טעינת נתונים מהשרת בטעינה ראשונה
     useEffect(() => {
@@ -46,6 +46,21 @@ export const AllRequest = () => {
             navigate(`Details/${id}`);
         }
     };
+    const handleStatusUpdate = async (id, status) => {
+        try {
+            await updateStatus(id, status);
+            // עדכון הרידקס או טעינת נתונים מחדש
+            if (status === "allowed") {
+                dispatch(allow(id));
+            }       
+            else if (status === "rejected") {   
+                dispatch(reject(id));
+            }
+        } catch (err) {
+            console.error("Failed to update request status:", err);
+        }
+    };
+
 
     if (loading) return <div style={{ marginTop: '25vh', textAlign: 'center' }}>Loading requests...</div>;
 
@@ -83,11 +98,11 @@ export const AllRequest = () => {
                             <div className="actions-col">
                                 <button 
                                     className="btn-action btn-allow"
-                                    // onClick={() => handleStatusUpdate(item._id, 'allowed')}
+                                     onClick={() => handleStatusUpdate(item._id, 'allowed')}
                                 >Allow</button>
                                 <button 
                                     className="btn-action btn-reject"
-                                    // onClick={() => handleStatusUpdate(item._id, 'rejected')}
+                                     onClick={() => handleStatusUpdate(item._id, 'rejected')}
                                 >Reject</button>
                                </div> 
                                 <div className="details-link" onClick={() => toggle(item._id || item.id)}>

@@ -1,29 +1,59 @@
 
-
-
-import React, { useReducer } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavLink } from 'react-router';
-
-import { useSelector } from 'react-redux';
+import swal from 'sweetalert';
+import { useDispatch, useSelector } from 'react-redux';
 
 import '../css/nav.css';
+import { logout } from '../api/user';
+import { setCurrent } from '../redux/Users';
 
 export const Nav = () => {
     const state = useSelector((state) => state.User); 
+      //הגדרת dispatch
+  const dispatch = useDispatch()
     // בדיקה האם המשתמש הנוכחי מנהל
     const manager=()=>{ 
-        if(state.Current && (state.Current.Id === '215893132' || state.Current.Id === '325454767')){
+        if(state.Current && (state.Current.role==='admin')){
    
          return   ( 
         <> 
              <li className="nav-item">
-                        <NavLink to="AllRequest" className="nav-link" >see Request</NavLink>
+                        <NavLink to="AllRequests" className="nav-link" >see Request</NavLink>
               </li>
          </>  
        ) } 
        return null
     }
+
+    // פונקציה לטיפול בהתנתקות עם דיאלוג אישור
+   const handleLogout = async () => {
+  // 1. מציגים את הדיאלוג ומחכים לתשובה של המשתמש 
+  const isConfirmed = await swal({
+    title: "Are you sure you want to log out?",
+    text: "You will need to log in again to access your account.",
+    icon: "warning",
+    buttons: {
+      cancel: { text: "Cancel", value: false, visible: true },
+      confirm: { text: "Confirm", value: true }
+    }
+  });
+
+  // 2. אם המשתמש התחרט או לחץ cancel, עוצרים מיד (Early Return)
+  if (!isConfirmed) return;
+
+  // 3. אם הוא אישר, מבצעים את תהליך ההתנתקות בראש שקט
+  try {
+    await logout(); // קריאה לשרת
+    dispatch(setCurrent(null)); // איפוס רידקס
+    
+    swal("Logged out", "You have been successfully logged out.", "success");
+    // כאן תוכלי להוסיף ניווט אם תרצי, למשל: navigate('/login');
+  } catch (err) {
+    console.error("Logout failed:", err);
+    swal("Error", "An error occurred while logging out. Please try again.", "error");
+  }
+};
     return (
     
         <nav className="navbar navbar-expand navbar-dark bg-dark" >
@@ -47,7 +77,7 @@ export const Nav = () => {
                      {state.Current?.name? <li className="nav-item nav-link" style={{border:" 5px solid #59d3deff"}}> Hello {state.Current.name}</li>:null}
                     <div className="ml-auto">
                         {state.Current ? (
-                            <NavLink to="logOut"> <div className="btn btn-light" >Log Out</div></NavLink>
+                            <div className="btn btn-light" onClick={handleLogout  } >Log Out</div>
                         ) : (
                             <>
                     <NavLink to="register"> <div className="btn btn-outline-light mr-2" >Sign Up</div></NavLink>

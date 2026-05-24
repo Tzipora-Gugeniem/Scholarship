@@ -11,18 +11,24 @@ export const SeeStatus=()=>{
 
   const currentUser = useSelector((state) => state.User?.Current);
   const [req, setReq] = useState(null);
-
+  // סימון טעינה בזמן שליפת הנתונים מהשרת
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     let isMounted = true;
     const fetchReq = async () => {
       try {
+      
         const res  = await getRequest();
         console.log(res.status);
-        if (isMounted) setReq(res);
+        if (isMounted) setReq(res); 
+        
       } catch (err) {
         console.error("Error fetching request:", err);
-        if (isMounted) setReq(null);
+        if (isMounted) setReq("not_found");
       }
+       finally {
+        setLoading(false);
+      } 
     };
 
     fetchReq();
@@ -51,8 +57,13 @@ export const SeeStatus=()=>{
     message: "We’re sorry, your request has been rejected.",
   },
 };
+if (loading) {
+    return <div style={{ marginTop: '25vh', textAlign: 'center' }}>Loading your request status...</div>;
+  }
     return<>
+    
 <div style={{ height: '20vh' }}></div> {/* רווח מעל הקופסה */}
+
     <Box
       sx={{
         
@@ -60,7 +71,7 @@ export const SeeStatus=()=>{
         justifyContent: "center", // מרכז אופקי
                            // רווח מהתפריט Navbar
       }}
-    >
+ >
       <Box    style={statusStyles[req?.status]}
         sx={{
           width: { xs: "90%", sm: "60%", md: "40%" }, // רוחב גמיש לפי מסך
@@ -72,7 +83,7 @@ export const SeeStatus=()=>{
           border: "2px solid #1abc9c" 
         }}
       >
-        {req?.isSubmitted ? (
+        {req && req !== "not_found" && req.isSubmitted ? (
           <>
         
             {/* סטטוס הבקשה גדול ושחור */}
@@ -82,15 +93,17 @@ export const SeeStatus=()=>{
         
             </Typography>
 
-<p>{req?.status==="waiting"?<span> Your request  is still under review</span>:req?.status==="allowed"?<span> Your request has been approved</span>:<span>  We’re sorry, your request has been rejected.</span>}</p>
+<p>{req?.status==="waiting"?<span> {statusStyles.waiting.message}</span>:req?.status==="allowed"?<span> {statusStyles.allowed.message}</span>:<span> {statusStyles.rejected.message}</span>}</p>
             {/* שם פרטי ושם משפחה */}
             <Typography variant="h6" sx={{ color: "#141616ff", mb: 1 }}>
-              {currentUser.name} {currentUser.LName}
+              {currentUser?.name} {currentUser?.LName}
 
             </Typography>
            
           </>
-        ) : (
+        ):  (req==="not_found"&&
+        
+
           <Typography variant="h6" sx={{ color: "#000" }}>
             No request found for current user.
           </Typography>

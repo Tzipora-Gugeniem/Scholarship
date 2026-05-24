@@ -7,13 +7,14 @@ import { Home } from "../comp/Home"
 import { SeeStatus } from "../comp/SeeStauts"
 import { NotFound } from "../comp/notFound"
 import { Nav } from "./Nav"
-import { AllRequest } from "../comp/AllRequest"
+
 import { AdminRoute } from "../comp/AdminRoute"
 import { SendRequest } from "../comp/SendRequest"
 import { FamilyDetails } from "../comp/Form/familyDetails"
 // import { SelfDetails } from "../comp/Form/SelfDetails"
 // import { Bank } from "../comp/Form/Bank"
 import { Details } from "../comp/Details"
+import { AllRequests } from "../comp/AllRequests"
 
 //דף זה מכיל את כל הניתובים הקימים בפרויקט
 export const Routing = () => {
@@ -31,7 +32,7 @@ export const Routing = () => {
                 </Route>
                 <Route path="MyStatus" element={<SeeStatus></SeeStatus>}></Route>
                 {/* נפתח את הצגת הבקשות בתוך קומפוננטה עוטפת כדי למנוע אפשרות כניסה דרך הניתוב למי שאינו מנהל */}
-                <Route path="AllRequest" element={<AdminRoute><AllRequest />
+                <Route path="AllRequests" element={<AdminRoute><AllRequests />
                 </AdminRoute>}>
                     {/* ניתוב ילד לצפייה בכל הבקשות לכל בקשה צפיה בכל הפרטים */}
                     <Route path='Details/:idReq' element={<Details></Details>}></Route>

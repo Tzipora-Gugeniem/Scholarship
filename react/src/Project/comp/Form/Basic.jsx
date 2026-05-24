@@ -23,7 +23,7 @@ export const Basic = (props) => {
   //שליפת בstate
   const state = useSelector((state) => state.request.Current)
   //כשכל השדות תקינים ומלאים
-  const submit =state.selfValid===2&&state.bankValid===2&&state.familyValid===2&&state.skillValid===2
+  const submit =state?.selfValid===2&&state?.bankValid===2&&state?.familyValid===2&&state?.skillValid===2
   const stepsArr = ["Personal Details", "Family Details", "major", "Bank Details", "submit"];
   //משתנה זה שומר את השלב הנוכחי בטופס
   const [form, setForm] = useState(0);

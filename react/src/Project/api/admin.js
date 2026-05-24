@@ -20,3 +20,10 @@ export const getAllWaitingReq=async()=>{
         catch(err){
             throw err
         }   }
+
+export const updateStatus=async(id,status)=>{
+    try{
+        const res=await api.put(`admin/updateStatus/${id}/status`,{status}) 
+    }    catch(err){
+            throw err
+        }       }
