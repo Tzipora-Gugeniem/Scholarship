@@ -12,9 +12,10 @@ export const getAll =(req,res)=>{
     }
 //כל הבקשות שהם בסטטוס ממתינים
 export const getAllWaiting =(req,res)=>{
-    requestModel.find({ status: "waiting" }).then(data=>
-    {        res.status(200).json(data)
-        } )
+    requestModel.find({ status: "waiting" }, 'self.name self.LName self.idUser skill.major status')
+        .then(data => {
+            res.status(200).json(data);
+        })
         .catch(error=>{
           return res.status(500).send(error)   
         })  

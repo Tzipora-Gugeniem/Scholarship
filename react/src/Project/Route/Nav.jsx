@@ -46,8 +46,12 @@ export const Nav = () => {
                      {/* יציג רק כששם שמשתמש מלא */}
                      {state.Current?.name? <li className="nav-item nav-link" style={{border:" 5px solid #59d3deff"}}> Hello {state.Current.name}</li>:null}
                     <div className="ml-auto">
+                        {state.Current ? (
+                            <NavLink to="logOut"> <div className="btn btn-light" >Log Out</div></NavLink>
+                        ) : (
+                            <>
                     <NavLink to="register"> <div className="btn btn-outline-light mr-2" >Sign Up</div></NavLink>
-                    <NavLink to="logIn"> <div className="btn btn-light" >Login</div></NavLink>
+                    <NavLink to="logIn"> <div className="btn btn-light" >Login</div></NavLink></>)}
                     </div>
                 </ul>
 
