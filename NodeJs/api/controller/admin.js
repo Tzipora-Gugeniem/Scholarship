@@ -41,3 +41,14 @@ export const updateRequestStatus = async (req, res) => {
     }
 };
 
+export const getDetails = async (req, res) => {
+    const { id } = req.params;  
+    try {
+        const request = await requestModel.findById(id);
+        if (!request) {
+            return res.status(404).json({ message: 'Request not found' });
+        }       
+        res.status(200).json(request);
+    } catch (err) {
+        res.status(500).json(err);
+    }     }

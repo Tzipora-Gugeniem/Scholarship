@@ -40,7 +40,7 @@ export const AllRequests = () => {
     const toggle = (id) => {
         if (openId === id) {
             setOpenId(null);
-            navigate("/AllRequest");
+            navigate("/AllRequests");
         } else {
             setOpenId(id);
             navigate(`Details/${id}`);

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import '../css/nav.css';
 import { logout } from '../api/user';
 import { setCurrent } from '../redux/Users';
+import { clearAll, updateCurrentDetails } from '../redux/request';
 
 export const Nav = () => {
     const state = useSelector((state) => state.User); 
@@ -46,7 +47,7 @@ export const Nav = () => {
   try {
     await logout(); // קריאה לשרת
     dispatch(setCurrent(null)); // איפוס רידקס
-    
+    dispatch(clearAll());
     swal("Logged out", "You have been successfully logged out.", "success");
     // כאן תוכלי להוסיף ניווט אם תרצי, למשל: navigate('/login');
   } catch (err) {

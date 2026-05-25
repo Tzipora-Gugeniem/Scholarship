@@ -38,12 +38,17 @@ const requestSlice = createSlice({
   
       state.Current = action.payload }
 ,
+    clearAll: (state) => {
+    state.list = []
+    state.Current = {}
+}
     
     }
 
+
 })
 //ייצוא הפעולות
-export const {  allow, reject,updateCurrentDetails,setList } = requestSlice.actions
+export const {  clearAll,allow, reject,updateCurrentDetails,setList } = requestSlice.actions
 
 export const selectWaiting = state => state.request.list.filter(x => x.status === "waiting")
 

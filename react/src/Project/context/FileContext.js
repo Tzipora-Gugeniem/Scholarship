@@ -12,6 +12,7 @@ export const FileProvider = ({ children }) => {
   const [studyPermitFile, setStudyPermitFile] = useState(null)
 
   return (
+    // הערכים שאנחנו רוצים לשתף לכל הקומפוננטות שבפנים
     <FileContext.Provider value={{
       bankAuthFile, setBankAuthFile,
       idCardFile, setIdCardFile,
@@ -23,5 +24,5 @@ export const FileProvider = ({ children }) => {
 }
 
 // hook נוח - במקום לכתוב useContext(FileContext) בכל מקום
-//  לא הוכנס בתקיית ההוקס כי הוא תלוי ב-FileContext
+// 
 export const useFiles = () => useContext(FileContext)

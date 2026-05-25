@@ -15,27 +15,32 @@ export const SeeStatus=()=>{
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     let isMounted = true;
-    const fetchReq = async () => {
-      try {
-      
-        const res  = await getRequest();
-        console.log(res.status);
-        if (isMounted) setReq(res); 
-        
-      } catch (err) {
-        console.error("Error fetching request:", err);
-        if (isMounted) setReq("not_found");
-      }
-       finally {
+
+    // ✅ אם אין משתמש — נקה ואל תשלח בקשה
+    if (!currentUser) {
+        setReq(null);
         setLoading(false);
-      } 
+        return;
+    }
+
+    setLoading(true); // ✅ איפוס loading בכל פעם שמשתמש משתנה
+
+    const fetchReq = async () => {
+        try {
+            const res = await getRequest();
+            if (isMounted) setReq(res);
+        } catch (err) {
+            console.error("Error fetching request:", err);
+            if (isMounted) setReq(null);
+        } finally {
+            if (isMounted) setLoading(false);
+        }
     };
 
     fetchReq();
-    return () => {
-      isMounted = false;
-    };
-  }, [currentUser?.id]);
+    return () => { isMounted = false; };
+
+}, [currentUser]); // ✅ מקשיב לכל שינוי במשתמש, כולל null
  //בהתאם לסטטוס הבקשה עיצובי סטטוס
   const statusStyles = {
   waiting: {
@@ -83,31 +88,19 @@ if (loading) {
           border: "2px solid #1abc9c" 
         }}
       >
-        {req && req !== "not_found" && req.isSubmitted ? (
-          <>
-        
-            {/* סטטוס הבקשה גדול ושחור */}
-            <Typography variant="h4" sx={{ color: "#000000", fontWeight: "bold", mb: 2 }}>
-              {req?.status?.toUpperCase()}
-              <br></br>
-        
-            </Typography>
-
-<p>{req?.status==="waiting"?<span> {statusStyles.waiting.message}</span>:req?.status==="allowed"?<span> {statusStyles.allowed.message}</span>:<span> {statusStyles.rejected.message}</span>}</p>
-            {/* שם פרטי ושם משפחה */}
-            <Typography variant="h6" sx={{ color: "#141616ff", mb: 1 }}>
-              {currentUser?.name} {currentUser?.LName}
-
-            </Typography>
-           
-          </>
-        ):  (req==="not_found"&&
-        
-
-          <Typography variant="h6" sx={{ color: "#000" }}>
-            No request found for current user.
-          </Typography>
-        )}
+        {!req ? (
+    <Typography variant="h6">No request found for current user.</Typography>
+) : (
+    <>
+        <Typography variant="h4" sx={{ color: "#000000", fontWeight: "bold", mb: 2 }}>
+            {req?.status?.toUpperCase()}
+        </Typography>
+        <p>{statusStyles[req.status]?.message}</p>
+        <Typography variant="h6">
+            {currentUser?.name} {currentUser?.LName}
+        </Typography>
+    </>
+)}
       </Box>
     </Box>
 

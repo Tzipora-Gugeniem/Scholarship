@@ -25,10 +25,15 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(error => {
         console.error(error);
     })
+
+    // הגדרת הנתיבים
 app.use('/request', requestRouter)
 app.use('/user', userRouter)
 app.use('/admin', adminRouter)
 
+//
+// הגדרת תיקיית uploads כסטטית - מאפשר גישה לקבצים דרך ה-URL
+app.use('/uploads', express.static('uploads'));
 const port=3001
 
 

@@ -35,7 +35,7 @@ export const Routing = () => {
                 <Route path="AllRequests" element={<AdminRoute><AllRequests />
                 </AdminRoute>}>
                     {/* ניתוב ילד לצפייה בכל הבקשות לכל בקשה צפיה בכל הפרטים */}
-                    <Route path='Details/:idReq' element={<Details></Details>}></Route>
+                    <Route path='Details/:id' element={<Details></Details>}></Route>
                 </Route>
                 <Route path="" element={<Home></Home>}></Route>
                 <Route path="*" element={<NotFound></NotFound>}></Route>

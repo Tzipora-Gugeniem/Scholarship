@@ -7,7 +7,7 @@ export const useFilePreview = (file) => {
 
   // פונקציה שהופכת את המצב - פתוח/סגור
   const toggle = () => setShow(prev => !prev)
-    // useEffect תמיד רץ - אבל פועל רק אם PDF ו-show פתוח
+    // useEffect תמיד רץ - אבל פועל רק עם PDF ו-show פתוח
     useEffect(() => {
       if (show && file?.type === 'application/pdf') {
         window.open(URL.createObjectURL(file), '_blank')

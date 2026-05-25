@@ -50,13 +50,13 @@ swal({
   
   // 2. רק אז מאפסים את הנתונים ב-Redux (אם באמת צריך)
   // עדיף לשלוח null או אובייקט במבנה המקורי
-  dispatch(updateCurrentDetails(null)); 
+  dispatch(updateCurrentDetails({})); 
 });
     } catch (err) {
       swal({ title: "Error", text: "save failed", icon: "error" })
     }
   }
-
+if (!state?.self) return null;
  return<>
 
 

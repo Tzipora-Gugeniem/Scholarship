@@ -20,7 +20,7 @@ export const Home = () => {
   // יוצג בתחתית הדף עם תמונה
   const students = [{ name: "Sigal Saily", description: "This was the opportunity of my life. I developed, I progressed, and I came far.", }, 
   { name: "Nehoray Arieli", description: "Sometimes all a student needs is something to support them. Thank you.", }, 
-  { name: "Rolli teth", description: "I can say that this scholarship is what brought me to prosperity and economic prosperity.", },
+  { name: "Rolli tieth", description: "I can say that this scholarship is what brought me to prosperity and economic prosperity.", },
 { name: "tal Gotlib", description: "The scholarship I received was my starting point. I started investing and persevering, and that's why I saw results....", }];
 
 
