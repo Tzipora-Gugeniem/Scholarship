@@ -15,7 +15,7 @@ export const  Skill=()=>{
 //    שימוש בקבצים גלובאלים
    const { studyPermitFile, setStudyPermitFile } = useFiles()
   //  שימוש בהוקס לתצוגה מקדימה-עי שליחת שם הטופס המתאים בכל פעם
-     const { toggle: toggleStudy, Preview: StudyPreview } = useFilePreview(studyPermitFile)
+     const { toggle: toggleStudy} = useFilePreview(studyPermitFile)
        //הגדרת dispatch
        const dispatch = useDispatch()  
    
@@ -76,8 +76,8 @@ return<>
   📎Upload Study Permit
 </label>
      {studyPermitFile && <>
-        <button onClick={toggleStudy}>📄 {studyPermitFile.name}</button>
-        <StudyPreview />
+        <button onClick={toggleStudy}className="fileButton">📄 {studyPermitFile.name}</button>
+       
       </>}
 </div>
 

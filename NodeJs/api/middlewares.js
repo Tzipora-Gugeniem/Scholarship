@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken'
 import multer from "multer";
+import fs from 'fs';
+import path from 'path';
+
 // בדיקות תקינות-פונקתיה גנרית המשתמשת בפונקציות תקינות שוננות עבור כל סכמה
 export const validate = (schema) => (req, res, next) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
@@ -41,8 +44,25 @@ export const isAdmin=(req,res,next)=>{
         next()
 }
 
-const storage = multer.memoryStorage();
-// הגנה על המסד מפני חדירת קבצים מסוכנים
+
+// ודואים שתיקיית uploads קיימת בשרת, ואם לא - יוצרים אותה אוטומטית
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+}
+
+// הגדרת אחסון על הדיסק ן
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // שם התיקייה בה יישמרו הקבצים
+    },
+    filename: (req, file, cb) => {
+        // יצירת שם ייחודי למניעת דריסת קבצים: זמן + מספר רנדומלי + סיומת מקורית
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+// הגנה על המסד מפני חדירת קבצים מסוכנים (נשאר כפי שכתבת)
 const fileFilter = (req, file, cb) => {
   const allowed = ['image/jpeg', 'image/png', 'application/pdf'];
   if (allowed.includes(file.mimetype)) cb(null, true)
@@ -50,18 +70,19 @@ const fileFilter = (req, file, cb) => {
 };
 
 export const upload = multer({
-  storage,
+  storage, // משתמש ב-diskStorage החדש
   fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 }
 });
-// הגדרת הקבצים בשדות
-// middlewares.js
+
+// הגדרת הקבצים בשדות (נשאר ללא שינוי)
 export const uploadFiles = upload.fields([
   { name: 'idCardFile', maxCount: 1 },
   { name: 'bankAuthFile', maxCount: 1 },
   { name: 'studyPermitFile', maxCount: 1 }
-])
-// המרה לגייסון את הקבצים שנשלחו מהלקוח
+]);
+
+// המרה לג'ייסון (נשאר ללא שינוי)
 export const parseFormData = (req, res, next) => {
   try {
     if (req.body.self) req.body.self = JSON.parse(req.body.self)
@@ -72,4 +93,4 @@ export const parseFormData = (req, res, next) => {
   } catch (err) {
     res.status(400).json({ message: 'נתונים לא תקינים' })
   }
-}
+};

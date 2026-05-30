@@ -10,7 +10,7 @@ export const SelfDetails = () => {
   const state = useSelector((state) => state.User?.Current)
   // ייבוא משתנים לטיפול בטפסים
   const {idCardFile, setIdCardFile}=useFiles()
-    const { toggle: toggleId, Preview: IdPreview } = useFilePreview(idCardFile)
+    const { toggle: toggleId} = useFilePreview(idCardFile)
   const stateReq=useSelector((state)=>state?.request?.Current)
   const initialSelfDetails ={...stateReq?.self ,idUser: state?.Id, name: state?.name  ,LName:state?.LName} ;
 
@@ -95,7 +95,7 @@ const maxDate=new Date(today.getFullYear() - 16, today.getMonth(), today.getDate
 
       {idCardFile && <>
         <button onClick={toggleId} className="fileButton">📄 {idCardFile.name}</button>
-        <IdPreview />
+      
       </>}
 
 

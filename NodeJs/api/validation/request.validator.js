@@ -37,7 +37,7 @@ export const requestSchema = Joi.object({
     account:Joi.string().min(6).required(),
     bName:Joi.string().required(),
     branch:Joi.string().required(),
-   bankAuthFile: Joi.any().optional() // אישור קובץ בנק
+    authFile: Joi.any().optional() // אישור קובץ בנק
   }).required()
   
 })

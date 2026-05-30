@@ -10,7 +10,7 @@ export const Bank = () => {
   const state = useSelector((state) => state.request.Current)
   // שימוש במחסן הטפסים
 const { bankAuthFile, setBankAuthFile } = useFiles()
-  const { toggle: toggleBank, Preview: BankPreview } = useFilePreview(bankAuthFile)
+  const { toggle: toggleBank } = useFilePreview(bankAuthFile)
   const initialBankDetails = { ...state?.bank }; // שימוש בשרשור אופציונלי וערך ברירת מחדל
   const [Bank, setBank] = useState({
     ...initialBankDetails
@@ -173,11 +173,11 @@ console.log(Bank);
 />
 
 <label htmlFor="bankFile"  className="btn" style={{borderColor:'#009FAF',width:'50%',}}>
-  📎upload auth bank file {/* ← הכיתוב שאת רוצה */}
+  📎upload auth bank file 
 </label>
         {bankAuthFile && <>
         <button onClick={toggleBank} className="fileButton">📄 {bankAuthFile.name}</button>
-        <BankPreview />
+       
         </>}
     
 </div>

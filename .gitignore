@@ -14,7 +14,7 @@ pnpm-debug.log*
 pids/
 *.pid
 *.pid.lock
-
+/uploads/
 # Package manager artifacts
 .pnp/
 .pnp.js

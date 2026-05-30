@@ -19,6 +19,8 @@ import { useSelector } from "react-redux";
 import { useFiles } from "../../context/FileContext";
 import swal from "sweetalert"
 import { saveDraft } from "../../api/request";
+
+
 export const Basic = (props) => {
   //שליפת בstate
   const state = useSelector((state) => state.request.Current)

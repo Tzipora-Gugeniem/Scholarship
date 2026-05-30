@@ -1,4 +1,4 @@
-// אכסון הקבצים
+// אחסון הקבצים
 // לא ניתן לאחסן ברידקס קבצים 
 import { createContext, useContext, useState } from 'react'
 

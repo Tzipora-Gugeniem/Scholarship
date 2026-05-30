@@ -1,0 +1,107 @@
+/* Main container - Fixed background and layout */
+.details-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px; /* Reduced gap from 24px to make it more compact */
+    padding: 20px; /* Reduced padding */
+    /*background-color: #f3f6f9 !important; /* Forces the background to stay fixed and not just on hover */
+    min-height: calc(80vh - 80px); /* Adjusts height taking header into account */
+    font-family: system-ui, -apple-system, sans-serif;
+    box-sizing: border-box;
+    direction: ltr;
+}
+
+/* Single column design - Smaller and tighter padding */
+.form-column {
+    background-color: #ffffff ;
+    border: 1px solid #f2f6fb;
+    border-radius: 12px; /* Slightly less rounded for a sharper look */
+    padding: 16px; /* Reduced internal padding from 24px */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Smaller Title inside each card */
+.column-title {
+    font-size: 18px; /* Shrunk from 22px */
+    color: #1a202c;
+    margin-top: 0;
+    margin-bottom: 15px; /* Less spacing */
+    text-align: center;
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Input group */
+.form-input-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    gap: 8px;
+    margin-bottom: 10px; /* Tighter spacing between inputs */
+    width: 100%;
+}
+
+/* Smaller Label styling */
+.form-label {
+    font-size: 13px; /* Shrunk from 15px */
+    color: #4a5568;
+    font-weight: 500;
+    text-align: left;
+    flex: 1; 
+    white-space: nowrap; 
+}
+
+/* Input fields - Smaller font, smaller size, and less aggressive rounding */
+.form-input {
+    padding: 6px 12px; /* Smaller padding inside the inputs */
+    font-size: 13px; /* Shrunk from 15px */
+    border: 1.2px solid #95eff6; 
+    border-radius: 15px; /* Shrunk from 25px for a more refined look */
+    background-color: white;
+    color: #2d3748;
+    flex: 1.4; 
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    height: 32px; /* Fixed smaller height */
+}
+
+.fields-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Smaller button at the bottom */
+.column-button {
+    background-color: white;
+    border: 1.5px solid #95eff6;;
+    color: #2d3748;
+    padding: 8px 16px; /* Smaller padding */
+    border-radius: 20px;
+    font-size: 14px; /* Shrunk from 16px */
+    cursor: pointer;
+    align-self: center;
+    font-weight: 600;
+    margin-top: 15px;
+    width: 85%;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.column-button:hover {
+    background-color: #95eff6;
+    color: white;
+    box-shadow: 0 2px 8px rgba(168, 196, 158, 0.2);
+}
+
+.column-button:disabled {
+    border-color: #cbd5e0;
+    color: #a0aec0;
+    cursor: not-allowed;
+    background-color: #edf2f7;
+}
