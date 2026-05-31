@@ -59,8 +59,8 @@ else
         <h3>Login Here</h3>
         {/* (e)=()=>{e.value}) */}
         <div className="field">
-          <label htmlFor="username">Username</label>
-          <input type="text" placeholder="Email or Phone" id="username" onChange={(e) => { setObj({ ...obj, Id: e.target.value }) }} value={obj.Id ||""}></input>
+          <label htmlFor="username-ID">Username</label>
+          <input type="text" placeholder="your ID" id="username" onChange={(e) => { setObj({ ...obj, Id: e.target.value }) }} value={obj.Id ||""}></input>
         </div>
         <div className="field">
           <label htmlFor="password">Password</label>

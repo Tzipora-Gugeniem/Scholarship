@@ -27,12 +27,12 @@ export const Details = () => {
     // Extracting backend paths
     const idCardFile = req?.self?.idCardFile || null
     const studyPermitFile = req?.skill?.studyPermitFile || null
-    const bankAuthFile = req?.bank?.authFile || null
+    const authFile = req?.bank?.authFile || null
 
     // File Preview Hooks
     const { toggle: toggleId } = useFilePreview(idCardFile)
     const { toggle: toggleStudy } = useFilePreview(studyPermitFile)
-    const { toggle: toggleBank } = useFilePreview(bankAuthFile)
+    const { toggle: toggleBank } = useFilePreview(authFile)
 
     if (loading) return <div className="loading">Loading...</div>
     if (!req || (!req._id && !req.self)) return <div className="error">Request not found</div>
@@ -146,8 +146,8 @@ export const Details = () => {
                         <input type="text" className="form-input" value={req.bank?.branch || ""} readOnly />
                     </div>
                 </div>
-                <button className="column-button" onClick={toggleBank} disabled={!bankAuthFile}>
-                    {bankAuthFile ? "📄 Bank Auth" : "❌ No File"}
+                <button className="column-button" onClick={toggleBank} disabled={!authFile}>
+                    {authFile ? "📄 Bank Auth" : "❌ No File"}
                 </button>
             </div>
 

@@ -42,3 +42,8 @@ export const logout = async () => {
     catch(error){
         throw error
     }   }
+
+export const banks=async()=>{
+    const response = await api.get('/request/banks')
+    return response.data
+}

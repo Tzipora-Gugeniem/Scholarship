@@ -10,6 +10,7 @@ import { Send } from './Send';
 
 import { useLoadRequest } from '../../hooks/loadRequest';
 import { useSelector } from 'react-redux';
+import { Loading } from '../Loading';
 
 export const MainForm = () => {
 // טעינת הבקשה הקיימת מהשרת והצבתה ברידקס ובקונטקסט הקבצים
@@ -37,7 +38,7 @@ const state = useSelector((state) => state.request.Current)
     }, []); // ירוץ פעם אחת כשהקומפוננטה עולה
 
     if (loading) {
-        return <div className="loader">Loading your draft...</div>;
+        return <Loading />;
     }
 return <>
   

@@ -32,3 +32,21 @@ export const getDetails = async (id) => {
         return res;
    
     }
+// מחיקת בקשה ספציפית כולל הקבצים הקשורים אליה
+export const deleteRequest = async (id) => {
+    try{
+    const res= await api.delete(`admin/delete/${id}`) ;
+    return res;}
+    catch(err){
+        throw err
+    }   
+}
+
+export const bulkDeleteRequests = async (ids) => {
+    try {
+        const res = await api.delete('/admin/deleteAll', { data: { ids } });
+        return res;
+    } catch (err) {
+        throw err;
+    }
+}

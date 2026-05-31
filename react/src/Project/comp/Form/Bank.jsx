@@ -1,187 +1,140 @@
-import { Checkbox } from "@mui/material"
+import { Checkbox, Autocomplete, TextField } from "@mui/material"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import { updateCurrentDetails } from "../../redux/request"
 import { useFiles } from "../../context/FileContext"
 import { useFilePreview } from "../../hooks/useFilePreview"
+import { banks } from "../../api/user"
 
 export const Bank = () => {
-  //שליפת הסטייט
+  const dispatch = useDispatch()
   const state = useSelector((state) => state.request.Current)
-  // שימוש במחסן הטפסים
-const { bankAuthFile, setBankAuthFile } = useFiles()
-  const { toggle: toggleBank } = useFilePreview(bankAuthFile)
-  const initialBankDetails = { ...state?.bank }; // שימוש בשרשור אופציונלי וערך ברירת מחדל
+  const[isAccountValid,setIsAccountValid]=useState(true)
+  const { authFile, setAuthFile } = useFiles()
+  const { toggle: toggleBank } = useFilePreview(authFile)
+  
   const [Bank, setBank] = useState({
-    ...initialBankDetails
+    hName: state?.bank?.hName || "",
+    account: state?.bank?.account || "",
+    bName: state?.bank?.bName || "", 
+    branch: state?.bank?.branch || ""
   });
 
-  //הגדרת dispatch
-  const dispatch = useDispatch()
+  const [dictionary, setDictionary] = useState({});
+  const [bankList, setBankList] = useState([]); 
+  const [loadingBanks, setLoadingBanks] = useState(true);
 
-  //הגדרת מילון הבנקים וסניפיהם
-  const dictionary = {
-    "99 - Bank of Israel": [
-      "001 - Central Office",
-      "002 - Government Complex",
-      "003 - Finance Tower",
-      "004 - National Accounts Center",
-      "005 - Monetary Division",
-      "006 - Supervision Offices"
-    ],
-
-    "10 - Bank Leumi": [
-      "701 - Jerusalem - Ramot Mall",
-      "702 - Jerusalem - Geula",
-      "703 - Jerusalem - Talpiot",
-      "704 - Tel Aviv - Ibn Gvirol",
-      "705 - Haifa - Horev Center",
-      "706 - Bnei Brak - Rabbi Akiva"
-    ],
-
-    "12 - Bank Hapoalim": [
-      "801 - Jerusalem - Malcha",
-      "802 - Jerusalem - Talpiot",
-      "803 - Jerusalem - Center",
-      "804 - Tel Aviv - Azrieli",
-      "805 - Ramat Gan - Diamond District",
-      "806 - Haifa - Carmel Center"
-    ],
-
-    "11 - Discount Bank": [
-      "401 - Jerusalem - City Center",
-      "402 - Jerusalem - Romema",
-      "403 - Tel Aviv - Rothschild",
-      "404 - Bnei Brak - Jabotinsky",
-      "405 - Haifa - Downtown",
-      "406 - Ashdod - City Center"
-    ],
-
-    "20 - Mizrahi Tefahot Bank": [
-      "301 - Lod - Industrial Zone",
-      "302 - Jerusalem - Geula",
-      "303 - Jerusalem - Talpiot",
-      "304 - Tel Aviv - Hashalom",
-      "305 - Haifa - Merkaz HaCarmel",
-      "306 - Modiin - Azrieli Mall"
-    ],
-
-    "4 - Bank Yahav": [
-      "101 - Jerusalem - Government Offices",
-      "102 - Tel Aviv - Hashalom",
-      "103 - Haifa - Horev",
-      "104 - Ashkelon - City Center",
-      "105 - Beersheba - Old City",
-      "106 - Netanya - Herzl Street"
-    ],
-
-    "14 - Otzar HaHayal Bank": [
-      "201 - Jerusalem - City Center",
-      "202 - Tel Aviv - Dizengoff",
-      "203 - Haifa - Carmel",
-      "204 - Ramat Gan - Bialik",
-      "205 - Beer Sheva - Kanyon HaNegev",
-      "206 - Netanya - Independence Square"
-    ],
-
-    "31 - First International Bank": [
-      "501 - Jerusalem - King George",
-      "502 - Tel Aviv - Azrieli",
-      "503 - Herzliya - High Tech Park",
-      "504 - Haifa - Central Station",
-      "505 - Ramat Gan - Diamond Exchange",
-      "506 - Modiin - City Center"
-    ],
-
-    "17 - Mercantile Bank": [
-      "601 - Jaffa - Old City",
-      "602 - Haifa - Downtown",
-      "603 - Jerusalem - City Center",
-      "604 - Ashdod - Marina",
-      "605 - Lod - Ramat Eshkol",
-      "606 - Bnei Brak - Rabbi Akiva"
-    ],
-
-    "54 - Jerusalem Bank": [
-      "901 - Jerusalem - Givat Shaul",
-      "902 - Jerusalem - City Entrance",
-      "903 - Jerusalem - Center",
-      "904 - Beit Shemesh - City Center",
-      "905 - Modiin Illit - Kiryat Sefer",
-      "906 - Tel Aviv - Hashalom"
-    ]
-  }
-
-
-
-  //טיפול במילון הבנקים
-  const bank = Object.keys(dictionary)
-// משתנה זה יבדוק מתי הטופס מלא ותקין-2
-//  מתי הטופס לא מלא -1
-//  מתי הערך לא תקין -0
-const[correctAccount,setCorrectAccount]=useState(true)
-  const isComplete =!!(Bank.account && Bank.branch && Bank.bName && Bank.hName&& correctAccount &&bankAuthFile)+!!(correctAccount)
-// בעת שינוי הערכים ישמר ברידקס
   useEffect(() => {
-   
- dispatch(updateCurrentDetails({ ...state, bank: { ...Bank }, bankValid:isComplete }))
-console.log(Bank);
+    const fetchBanksFromServer = async () => {
+      try {
+        setLoadingBanks(true);
+        const response = await banks();
+        let rawData = response?.data ? response.data : response;
+
+        if (rawData && typeof rawData === 'object') {
+          setDictionary(rawData);
+          setBankList(Object.keys(rawData).sort());
+        }
+      } catch (error) {
+        console.error("Failed to fetch banks from server:", error);
+      } finally {
+        setLoadingBanks(false);
+      }
+    };
+    fetchBanksFromServer();
+  }, []); 
 
 
-  }, [isComplete,Bank])
+  const isComplete = !!(Bank.account && Bank.branch && Bank.bName && Bank.hName && isAccountValid && authFile) + !!(isAccountValid);
+
+  useEffect(() => {
+    if (loadingBanks && bankList.length === 0) return;
+    dispatch(updateCurrentDetails({ ...state, bank: { ...Bank }, bankValid: isComplete }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Bank, isComplete, authFile, dispatch]);
+
   return <>
-    <div className="input">
+    <div className="input" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
       <h1> Bank Details </h1>
 
-      <label name="nameb">Bank Account Holder</label>
-      <input type="text" onChange={(e) => {
-        setBank({ ...Bank, hName: e.target.value })
-      }} value={Bank.hName} />
-      <label name="nameA" >   Account Number </label>
-      <input type="text" onChange={(e) => {
-        setBank({ ...Bank, account: e.target.value })
-      }} value={Bank.account}
-      minLength={6}   onBlur={(e)=>{setCorrectAccount(e.target.validity.valid)}} />
+      <div>
+        <label>Bank Account Holder</label>
+        <input type="text" onChange={(e) => setBank({ ...Bank, hName: e.target.value })} value={Bank.hName} />
+      </div>
       
-                        {/* יןצג בעת שגיאה */}
-        <p hidden={correctAccount} style={{color:'red'}}>At least 6 digits</p>
-      <br></br>
+      <div>
+        <label> Account Number </label>
+        <input type="text" onChange={(e) => setBank({ ...Bank, account: e.target.value })} value={Bank.account} minLength={6}  onBlur={(e)=>setIsAccountValid(e.target.validity.valid)}/>
+        {!isAccountValid && <p style={{ color: 'red', fontSize: '13px', margin: '5px 0 0 0' }}>At least 6 digits</p>}
+      </div>
 
-      <select onChange={(e) => {
-        // ברגע שיתשנה שם בנק  יצטרכו לבחור גם סניףך
-        setBank({ ...Bank, bName: e.target.value, branch:"" })
-      }
-      } value={Bank.bName}>
-        <option selected hidden > Choose Bank Name  </option>
-        {bank.map((m) => <option value={m}>{m}</option>)}
-      </select>
-    
-      {Bank.bName &&
-        <select onChange={(e) => { setBank({ ...Bank, branch: e.target.value }) }} value={Bank.branch}>
-          <option selected hidden >Choose Bank Branch </option>
-          {dictionary[Bank.bName].map((name) => <option value={name}>{name}</option>)}
-        </select>
+      
+      <div style={{ width: '100%', marginTop: '10px' }}>
+      
+        <label style={{ display: 'block', marginBottom: '8px' }}>Choose Bank Name</label>
+        <Autocomplete
+          options={bankList}
+          loading={loadingBanks}
+          value={Bank.bName || null}
+          onChange={(event, newValue) => {
+            setBank({ ...Bank, bName: newValue || "", branch: "" });
+            
+          }}
+          
+          renderInput={(params) => (
+            <TextField 
+              {...params} 
+              variant="outlined" 
+              // משתמשים ב-placeholder נקי שייעלם מיד כשמתחילים להקליד, בלי לייבלים קופצים
+              placeholder={loadingBanks ? "Loading..." : "Select or type to search..."}
+              fullWidth
+              // 💡 השורה שמבטלת לחלוטין את הלייבל הפנימי המציק של MUI ומנקה את הריבוע
+              InputLabelProps={{ shrink: false }} 
+              
+            />
+          )}
+        />
+      </div>
+      {Bank.bName && Bank.bName.trim() !== "" && dictionary[Bank.bName] && (
+        <div style={{ width: '100%', marginTop: '10px' }}>
+          <label style={{ display: 'block', marginBottom: '8px' }}>Choose Bank Branch</label>
+          <Autocomplete
+            
+            options={dictionary[Bank.bName]}
+            value={Bank.branch || null}
+            onChange={(event, newValue) => {
+              setBank({ ...Bank, branch: newValue || "" });
+            }}
+            renderInput={(params) => (
+              <TextField 
+              
+                {...params} 
+                variant="outlined" 
+                placeholder="Select or type branch..."
+                fullWidth
+                InputLabelProps={{ shrink: false }}
+              />
+            )}
+          />
+        </div>
+      )}
 
+      <div style={{ marginTop: '15px' }}>
+        <input id="bankFile" type="file" accept=".jpg,.png,.pdf" onChange={(e) => {
+      
+        setAuthFile(e.target.files[0]);
+      }} 
+      style={{ display: 'none' }} />
+        <label htmlFor="bankFile" className="btn" style={{ borderColor: '#009FAF', width: '50%', display: 'inline-block', cursor: 'pointer', textAlign: 'center' }}>
+          📎 upload auth bank file 
+        </label>
         
-      }
- <input 
-  id="bankFile"
-  type="file"
-  accept=".jpg,.png,.pdf" 
-  onChange={(e) => setBankAuthFile(e.target.files[0])}
-  style={{ display: 'none' }}
-/>
-
-<label htmlFor="bankFile"  className="btn" style={{borderColor:'#009FAF',width:'50%',}}>
-  📎upload auth bank file 
-</label>
-        {bankAuthFile && <>
-        <button onClick={toggleBank} className="fileButton">📄 {bankAuthFile.name}</button>
-       
-        </>}
-    
-</div>
-
-
+        {authFile && (
+          <div style={{ marginTop: '10px' }}>
+            <button onClick={toggleBank} className="fileButton">📄 {authFile.name || "File attached"}</button>
+          </div>
+        )}
+      </div>
+    </div>
   </>
 }

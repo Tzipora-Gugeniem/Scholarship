@@ -42,14 +42,16 @@ const requestSlice = createSlice({
     clearAll: (state) => {
     state.list = []
     state.Current = {}
+},
+    deleteRequestFromStore: (state, action) => {
+  state.allRequests = state.allRequests.filter(req => req._id !== action.payload);
 }
-    
     }
 
 
 })
 //ייצוא הפעולות
-export const {  clearAll,allow, reject,updateCurrentDetails,setList } = requestSlice.actions
+export const {  clearAll,allow, reject,updateCurrentDetails,setList,deleteRequestFromStore } = requestSlice.actions
 
 export const selectWaiting = state => state.request.list.filter(x => x.status === "waiting")
 

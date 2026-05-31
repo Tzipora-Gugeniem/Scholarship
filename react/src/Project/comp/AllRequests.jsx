@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { allow, reject, setList } from "../redux/request";
+import { allow, deleteRequestFromStore, reject, setList } from "../redux/request";
 import { useState, useEffect, useMemo } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { getAllWaitingReq, updateStatus } from "../api/admin";
+import { bulkDeleteRequests, deleteRequest, getAllWaitingReq, updateStatus } from "../api/admin";
 import swal from 'sweetalert';
 import "../css/allRequest.css";
 import { Loading } from "./Loading";
@@ -146,6 +146,7 @@ export const AllRequests = () => {
         dangerMode: true,
     });
 
+
     // 3. אם המשתמש אישר (לחץ על Confirm)
     if (willUpdate) {
         try {
@@ -171,6 +172,21 @@ export const AllRequests = () => {
             setLoading(false); // כיבוי ספינר הטעינה בכל מקרה
         }
     }
+};
+
+const handleDelete = async (id) => {
+  if (!window.confirm("Are you sure?")) return;
+
+  try {
+    await deleteRequest(id); // קריאה לשרת למחיקת הבקשה הספציפית
+    
+    console.log(id);
+    
+    dispatch(deleteRequestFromStore(id)); 
+    
+  } catch (error) {
+    console.error(error);
+  }
 };
 
     if (loading) return <Loading style={{ marginTop: '25vh', textAlign: 'center' }}>L</Loading>;
@@ -239,7 +255,7 @@ export const AllRequests = () => {
                                     <button className="row-btn-design spec-reject-color" onClick={() => handleStatusUpdate(item._id, 'rejected')}>
                                         <CrossIcon /> reject
                                     </button>
-                                    <button className="row-btn-design spec-delete-color" onClick={() => console.log('Delete:', item._id)} title="Delete">
+                                    <button className="row-btn-design spec-delete-color" onClick={() => handleDelete(item._id)} title="Delete">
                                         <TrashIcon />
                                     </button>
                                 </div> 
@@ -259,7 +275,7 @@ export const AllRequests = () => {
                 )}
                 {sortedRequests.length > 0 && (
                     <div className="bottom-floating-dock-container">
-                        <button className="dock-action-button dock-action-delete" onClick={() => console.log('bulk delete')}>
+                        <button className="dock-action-button dock-action-delete" onClick={() => bulkDeleteRequests(sortedRequests.map(item => item._id || item.id))}>
                             <TrashIcon /> delete all
                         </button>
                         <button className="dock-action-button dock-action-allow" onClick={() => updateListRequest(sortedRequests, 'allowed')}

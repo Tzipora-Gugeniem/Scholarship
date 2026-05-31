@@ -6,7 +6,7 @@ import { getRequest } from "../api/request";
 // הוק לטעינת הבקשה הקיימת מהשרת והצבתה ברידקס ובקונטקסט הקבצים
 export const useLoadRequest = () => {
     const dispatch = useDispatch();
-    const { setIdCardFile, setBankAuthFile, setStudyPermitFile } = useFiles();
+    const { setIdCardFile, setAuthFile, setStudyPermitFile } = useFiles();
 
   
 
@@ -24,7 +24,7 @@ export const useLoadRequest = () => {
             dispatch(updateCurrentDetails(actualRequestData));
 // 2. עדכון קונטקסט הקבצים עם הנתונים מהשרת (אם קיימים)
             setIdCardFile(actualRequestData.self?.idCardFile || null);
-            setBankAuthFile(actualRequestData.bank?.authFile || null);
+            setAuthFile(actualRequestData.bank?.authFile || null);
             setStudyPermitFile(actualRequestData.skill?.studyPermitFile || null);
 
             return response;

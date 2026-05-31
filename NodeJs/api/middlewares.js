@@ -78,7 +78,7 @@ export const upload = multer({
 // הגדרת הקבצים בשדות (נשאר ללא שינוי)
 export const uploadFiles = upload.fields([
   { name: 'idCardFile', maxCount: 1 },
-  { name: 'bankAuthFile', maxCount: 1 },
+  { name: 'authFile', maxCount: 1 },
   { name: 'studyPermitFile', maxCount: 1 }
 ]);
 

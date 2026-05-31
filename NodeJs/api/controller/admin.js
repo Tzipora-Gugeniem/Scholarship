@@ -1,6 +1,6 @@
 // כל הפעולות שהמנהל היחיד שמורשה לבצע
 import requestModel from "../models/request.js";
-
+import fs from 'fs';
 // עדכון סטטוס של בקשה מסוימת (סרוב או אישור)
 export const updateRequestStatus = async (req, res) => {
     const { id } = req.params;
@@ -56,7 +56,64 @@ export const getDetails = async (req, res) => {
     }     
 };
 
-
+//מחיקת בקשה כולל מחיקת קבצים קשורים
+export const deleteRequest = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deleted = await requestModel.findByIdAndDelete(id);
+        if (!deleted) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+        // מחיקת קבצים קשורים מהדיסק
+        const filesToDelete = [
+            deleted.self?.idCardFile,
+            deleted.skill?.studyPermitFile,
+            deleted.bank?.authFile
+        ].filter(Boolean); // מסנן ערכים ריקים או לא מוגדרים       
+        filesToDelete.forEach(filePath => {
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }  
+        });
+        res.status(200).json({ message: 'Request and associated files deleted successfully' });
+    }       
+    catch (err) {
+        res.status(500).json(err);
+    }
+};
+// מחיקת בקשות מרובות כולל קבצים קשורים
+export const bulkDeleteRequests = async (req, res) => {
+    try {   
+        const { ids } = req.body; // ids יהיה מערך: ['id1', 'id2', ...]
+        if (!Array.isArray(ids) || ids.length === 0) {
+            // אם המערך ריק או לא תקין, נחזיר שגיאה 
+            return res.status(400).json({ message: "Invalid or empty IDs array" });
+        }
+        // שליפת כל הבקשות שברצוננו למחוק כדי לקבל את הנתיבים של הקבצים הקשורים
+        const requestsToDelete = await requestModel.find({ _id: { $in: ids } });    
+        // מחיקת קבצים קשורים מהדיסק לכל בקשה שנמחקת
+        requestsToDelete.forEach(request => {
+            const filesToDelete = [
+                request.self?.idCardFile,
+                request.skill?.studyPermitFile,
+                request.bank?.authFile
+            ].filter(Boolean);
+            filesToDelete.forEach(filePath => {
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath
+                );
+                }
+            });
+        });
+        // מחיקת הבקשות מהמסד נתונים
+        const deleteResult = await requestModel.deleteMany({ _id: { $in: ids } });
+        res.status(200).json({ message: `Successfully deleted ${deleteResult.deletedCount} requests and their associated files.` });
+    }
+        catch (error) {
+            console.error("Error in bulk delete:", error);
+            res.status(500).json({ message: "Server Error during bulk delete" });
+        }
+};
 
 export const getAllFilteredRequests = async (req, res) => {
     try {

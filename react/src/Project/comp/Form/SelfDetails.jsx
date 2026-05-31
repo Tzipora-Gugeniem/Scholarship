@@ -85,6 +85,9 @@ const maxDate=new Date(today.getFullYear() - 16, today.getMonth(), today.getDate
        }}></input> 
        {/* שגיאה */}
     <p hidden={correctPhone} style={{color:'red'}}>Valid phone number: 9–10 digits, starting with 0</p>
+    
+    
+    
     {/* צילום ת"ז */}
   <input id="idCardFile" type="file" accept=".jpg,.png,.pdf"
   onChange={(e) => setIdCardFile(e.target.files[0])}
@@ -94,7 +97,7 @@ const maxDate=new Date(today.getFullYear() - 16, today.getMonth(), today.getDate
 </label>
 
       {idCardFile && <>
-        <button onClick={toggleId} className="fileButton">📄 {idCardFile.name}</button>
+        <button onClick={toggleId} className="fileButton">📄 idCardFile</button>
       
       </>}
 

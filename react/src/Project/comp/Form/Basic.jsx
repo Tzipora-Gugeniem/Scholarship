@@ -78,7 +78,7 @@ export const Basic = (props) => {
 
 // שמירת טיוטה
 // שולפים קבצים מהקונטקסט
-const { bankAuthFile, idCardFile, studyPermitFile } = useFiles()
+const { authFile, idCardFile, studyPermitFile } = useFiles()
 
 const saveYourDraft = async () => {
   try {
@@ -92,7 +92,7 @@ const saveYourDraft = async () => {
     
     // קבצים אם קיימים
     if (idCardFile) formData.append('idCardFile', idCardFile)
-    if (bankAuthFile) formData.append('bankAuthFile', bankAuthFile)
+    if (authFile) formData.append('authFile', authFile)
     if (studyPermitFile) formData.append('studyPermitFile', studyPermitFile)
     
     

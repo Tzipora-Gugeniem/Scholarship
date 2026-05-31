@@ -11,11 +11,11 @@ export const Send = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state.request.Current) 
   const navigate = useNavigate()
-  const { bankAuthFile, idCardFile, studyPermitFile } = useFiles() 
+  const { authFile, idCardFile, studyPermitFile } = useFiles() 
 
   // שימוש בהוקס לתצוגה מקדימה
   const { toggle: toggleId} = useFilePreview(idCardFile)
-  const { toggle: toggleBank } = useFilePreview(bankAuthFile)
+  const { toggle: toggleBank } = useFilePreview(authFile)
   const { toggle: toggleStudy} = useFilePreview(studyPermitFile)
 
   const [confirm, setConfirm] = useState(false)
@@ -40,7 +40,7 @@ export const Send = () => {
 
       // שולחים לשרת רק אם זה אובייקט קובץ אמיתי (File) שהרגע הועלה מהמחשב
       if (idCardFile && typeof idCardFile !== 'string') formData.append('idCardFile', idCardFile)
-      if (bankAuthFile && typeof bankAuthFile !== 'string') formData.append('bankAuthFile', bankAuthFile)
+      if (authFile && typeof authFile !== 'string') formData.append('authFile', authFile)
       if (studyPermitFile && typeof studyPermitFile !== 'string') formData.append('studyPermitFile', studyPermitFile)
       
       await save(formData) // שליחה לשרת
@@ -122,10 +122,10 @@ export const Send = () => {
           <p>Bank Name: {state.bank.bName}</p>
           <p>Bank Branch: {state.bank.branch}</p>
           <p>Bank Authorization:</p>
-          {bankAuthFile && (
+          {authFile && (
             <>
               <button onClick={toggleBank} className="fileButton">
-                📄 {getFileName(bankAuthFile, "Bank Auth")}
+                📄 {getFileName(authFile, "Bank Auth")}
               </button>
               
             </>

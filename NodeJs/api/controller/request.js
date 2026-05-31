@@ -3,6 +3,50 @@
 import requestModel from "../models/request.js";
 import fs from 'fs';
 
+
+import axios from 'axios';
+
+export const getBanksDictionary = async (req, res) => {
+    try {
+        const url = "https://data.gov.il/api/3/action/datastore_search?resource_id=2202bada-4baf-45f5-aa61-8c5bad9646d3";
+        
+        // השרת פונה ל-API הממשלתי
+        const response = await axios.get(url);
+        const records = response.data.result?.records || [];
+
+        const dictionary = {};
+
+        records.forEach(item => {
+const bankCode = item["Bank_Code"]?.toString().padStart(2, '0');
+            const bankName = item["Bank_Name"]?.trim();
+            const branchCode = item["Branch_Code"]?.toString().padStart(3, '0');
+            const branchName = item["Branch_Name"]?.trim();
+            const cityName = item["City"]?.trim();
+
+            if (!bankCode || !bankName) return;
+
+            const bankKey = `${bankCode} - ${bankName}`;
+            const branchValue = `${branchCode} - ${branchName}`;
+
+            if (!dictionary[bankKey]) {
+                dictionary[bankKey] = [];
+            }
+            dictionary[bankKey].push(branchValue);
+        });
+
+        // מיון הסניפים
+        Object.keys(dictionary).forEach(bankKey => {
+            dictionary[bankKey].sort();
+        });
+
+        // החזרת הדיקשנרי המוכן ללקוח
+        return res.status(200).json(dictionary);
+
+    } catch (error) {
+        console.error("Error fetching banks from API:", error);
+        return res.status(500).json({ message: "Failed to fetch banks" });
+    }
+};
     // קבלת בקשה קיימת עבור משתמש מחובר על פי העוגיה רק עבור בקשה בסטטוס טיוטה 
     // עבור בקשה שכבר הוגשה יחזיר רק סטטוס
     export const getRequest = async (req, res) => {
@@ -45,11 +89,11 @@ export const saveRequest = (status) => async (req, res) => {
     }
 
     // 4. טיפול באישור בנק
-    if (req.files?.bankAuthFile) {
+    if (req.files?.authFile) {
       if (existingRequest?.bank?.authFile && fs.existsSync(existingRequest.bank.authFile)) {
         fs.unlinkSync(existingRequest.bank.authFile);
       }
-      bank.authFile = req.files.bankAuthFile[0].path; // ← התיקון: שימוש ב-
+      bank.authFile = req.files.authFile[0].path; // ← התיקון: שימוש ב-
     } else if (existingRequest?.bank?.authFile) {
       bank.authFile = existingRequest.bank.authFile;
     }
