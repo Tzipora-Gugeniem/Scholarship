@@ -6,6 +6,7 @@ import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { setCurrent } from "./redux/Users"
 import { getMe } from "./api/user"
+import { setLoadingDone } from "./redux/Users"
 
 const AppWrapper = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const AppWrapper = () => {
                 const data = await getMe();
                 dispatch(setCurrent(data.user));
             } catch (err) {
-                // אין טוקן — לא עושים כלום
+                 dispatch(setLoadingDone())
             }
         };
         restoreUser();

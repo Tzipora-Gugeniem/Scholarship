@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { setCurrent } from "../redux/Users";
 import { Box, Typography } from "@mui/material";
 import { getRequest } from "../api/request";
+import { Loading } from "./Loading";
 
 
 export const SeeStatus=()=>{
@@ -63,7 +64,7 @@ export const SeeStatus=()=>{
   },
 };
 if (loading) {
-    return <div style={{ marginTop: '25vh', textAlign: 'center' }}>Loading your request status...</div>;
+    return <Loading></Loading>
   }
     return<>
     

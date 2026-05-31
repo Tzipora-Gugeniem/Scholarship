@@ -9,24 +9,21 @@ export const getAllReq=async()=>{
             throw err
         }   }
 
-// קבלת כל הבקשות שממתינות לאישור
-export const getAllWaitingReq=async()=>{
-    try{
-        const res=await api.get('admin/waiting') 
-      
-         
-        return res;
-    }
-        catch(err){
-            throw err
-        }   }
-// עד כאן פונקציות הקשורות למנהל לקבלת נתונים מהשרת
+//קבלת כל הבקשות לפי פילטרים
+export const getAllWaitingReq = (queryParams) => {
+    // קריאה לנתיב של הפונקציה המאוחדת שמתמודדת עם כל הסינונים והטאבים בשרת
+    return api.get(`admin/getfiltered?${queryParams}`); 
+};
 export const updateStatus=async(id,status)=>{
    
         const res=await api.put(`admin/updateStatus/${id}/status`,{status}) 
         return res;
     }
-
+// אישור בקשות רבות
+export const bulkUpdateStatusAPI = async (ids, status) => {
+    // מניח שאתה משתמש ב-axios או fetch, שלח בקשת PUT או POST עם ה-Body
+    return await api.put("/admin/bulk-status", { ids, status }); 
+};
 
 // פתיחת פרטים של בקשה מסוימת לפי ID שלה
 export const getDetails = async (id) => {

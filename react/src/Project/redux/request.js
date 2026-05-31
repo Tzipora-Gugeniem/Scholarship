@@ -6,7 +6,8 @@ import { createSlice, current } from "@reduxjs/toolkit"
 const initialState = {
     list: [],
  
-    Current:{}
+    Current:{},
+    
 }
 //הגדרת הפונקציות בהם נשתמש על מערך הבקשות
 const requestSlice = createSlice({

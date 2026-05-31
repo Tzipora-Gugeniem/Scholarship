@@ -4,12 +4,17 @@ import swal from "sweetalert";
 import { FileProvider } from "../context/FileContext";
 import { useSelector } from "react-redux";
 import { MainForm } from "./Form/MainForm";
+import { Loading } from "./Loading";
 export const SendRequest = () => {
   const state = useSelector((state) => state.User);
   const navigate = useNavigate();
+const isLoading = useSelector((state) => state.User.isLoading)
 
   useEffect(() => {
-    if (!state.Current) {
+     if (isLoading) return; 
+     console.log(isLoading);
+     
+    if (!state.Current&& !isLoading) {
       swal({
         title: "You must be logged in to apply",
         text: "Please log in to continue",
@@ -27,7 +32,11 @@ export const SendRequest = () => {
         else if (value === "register") navigate("/register");
       });
     }
-  }, [state.Current, navigate]);
+  }, [state.Current, navigate, isLoading]);
+
+if (isLoading) {
+  return <Loading style={{width:'50%',height:'auto',justifySelf:'center'}}></Loading>
+}
 
   return (
     <FileProvider>
